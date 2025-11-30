@@ -15,6 +15,10 @@ class MangaViewer {
         this.observePages();
     }
 
+    // =======================
+    // CATÁLOGO
+    // =======================
+
     async loadCatalog() {
         try {
             const response = await fetch('data/catalog.json');
@@ -34,70 +38,47 @@ class MangaViewer {
         }
     }
 
-    async loadAllPages() {
-        try {
-            const response = await fetch('paginas/');
-            const html = await response.text();
-
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-
-            const links = Array.from(doc.querySelectorAll('a'))
-                .map(a => a.textContent)
-                .filter(name => /\.(png|jpg|jpeg|webp)$/i.test(name))
-                .sort();
-
-            this.allPages = links;
-
-        } catch (error) {
-            console.warn('No se pudo detectar archivos en la carpeta paginas/', error);
-        }
-    }
-
     renderCatalog() {
-    const catalog = document.getElementById('catalog');
-    if (!catalog) return;
+        const catalog = document.getElementById('catalog');
+        if (!catalog) return;
 
-    catalog.innerHTML = '';
+        catalog.innerHTML = '';
 
-    this.catalog.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.className = 'catalog__item';
+        this.catalog.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = 'catalog__item';
 
-        const link = document.createElement('a');
-        link.className = 'catalog__link';
+            const link = document.createElement('a');
+            link.className = 'catalog__link';
 
-        if (index === 0) link.classList.add('active');
+            if (index === 0) link.classList.add('active');
 
-        // SIEMPRE ir a la página interna
-        link.href = '#';
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.scrollToPage(item.startPage);
-        });
-
-        // Solo le agregamos una clase visual si es external (opcional)
-        if (item.type === 'external') {
-            link.classList.add('external-indicator');
-        }
-
-        link.textContent = item.title;
-        li.appendChild(link);
-        catalog.appendChild(li);
-    });
-}
-
-
-    scrollToPage(pageNumber) {
-        const pageElement = document.getElementById(`page-${pageNumber}`);
-
-        if (pageElement) {
-            pageElement.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
+            link.href = '#';
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.scrollToPage(item.startPage);
             });
 
-            this.updateActiveCatalogLink(pageNumber);
+            if (item.type === 'external') {
+                link.classList.add('external-indicator');
+            }
+
+            link.textContent = item.title;
+            li.appendChild(link);
+            catalog.appendChild(li);
+        });
+    }
+
+    // =======================
+    // PÁGINAS
+    // =======================
+
+    async loadAllPages() {
+        try {
+            const response = await fetch('data/pages.json');
+            this.allPages = await response.json();
+        } catch (error) {
+            console.error('Error cargando pages.json:', error);
         }
     }
 
@@ -146,7 +127,7 @@ class MangaViewer {
         viewer.appendChild(img);
         viewer.appendChild(pageNum);
 
-        // Si esta página tiene un link externo, hacerla clickeable
+        // Si la página tiene link externo
         if (this.pageLinks[pageIndex + 1]) {
             viewer.style.cursor = 'pointer';
 
@@ -159,6 +140,10 @@ class MangaViewer {
 
         wrapper.appendChild(viewer);
     }
+
+    // =======================
+    // OBSERVADOR
+    // =======================
 
     observePages() {
         const mainContent = document.getElementById('mainContent');
@@ -205,7 +190,6 @@ class MangaViewer {
 
         links.forEach((link, index) => {
             const item = this.catalog[index];
-
             if (!item || item.type === 'external') return;
 
             const nextItemStart = this.catalog[index + 1]?.startPage || this.allPages.length + 1;
@@ -217,6 +201,10 @@ class MangaViewer {
             link.classList.toggle('active', isInRange);
         });
     }
+
+    // =======================
+    // CONTROLES
+    // =======================
 
     setupEventListeners() {
         const sidebarToggle = document.getElementById('sidebarToggle');
@@ -252,6 +240,19 @@ class MangaViewer {
         }
     }
 
+    scrollToPage(pageNumber) {
+        const pageElement = document.getElementById(`page-${pageNumber}`);
+
+        if (pageElement) {
+            pageElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+            this.updateActiveCatalogLink(pageNumber);
+        }
+    }
+
     scrollToStart() {
         const mainContent = document.getElementById('mainContent');
         if (mainContent) {
@@ -269,8 +270,7 @@ class MangaViewer {
     }
 }
 
-
-// Iniciar la aplicación cuando el DOM esté listo
+// INICIO
 document.addEventListener('DOMContentLoaded', () => {
     new MangaViewer();
 });
