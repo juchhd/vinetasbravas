@@ -1,6 +1,6 @@
 class MangaViewer {
     constructor() {
-        this.allPages = [];
+        this.pages = [];
         this.loadedPages = new Set();
         this.isLoadingMore = false;
         this.catalog = [];
@@ -9,15 +9,22 @@ class MangaViewer {
     }
 
     async init() {
+        await this.loadPages();
         await this.loadCatalog();
-        await this.loadAllPages();
         this.setupEventListeners();
         this.observePages();
     }
 
-    // =======================
-    // CATÁLOGO
-    // =======================
+    // ===== NUEVO: Carga directa desde pages.json =====
+    async loadPages() {
+        try {
+            const response = await fetch('data/pages.json');
+            this.pages = await response.json();
+            console.log('Páginas cargadas:', this.pages.length);
+        } catch (error) {
+            console.error('Error cargando pages.json:', error);
+        }
+    }
 
     async loadCatalog() {
         try {
@@ -64,21 +71,22 @@ class MangaViewer {
             }
 
             link.textContent = item.title;
+
             li.appendChild(link);
             catalog.appendChild(li);
         });
     }
 
-    // =======================
-    // PÁGINAS
-    // =======================
+    scrollToPage(pageNumber) {
+        const pageElement = document.getElementById(`page-${pageNumber}`);
 
-    async loadAllPages() {
-        try {
-            const response = await fetch('data/pages.json');
-            this.allPages = await response.json();
-        } catch (error) {
-            console.error('Error cargando pages.json:', error);
+        if (pageElement) {
+            pageElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+            this.updateActiveCatalogLink(pageNumber);
         }
     }
 
@@ -89,9 +97,9 @@ class MangaViewer {
         if (!wrapper) return;
 
         const startIndex = this.loadedPages.size;
-        const endIndex = Math.min(startIndex + 5, this.allPages.length);
+        const endIndex = Math.min(startIndex + 5, this.pages.length);
 
-        if (startIndex >= this.allPages.length) {
+        if (startIndex >= this.pages.length) {
             return;
         }
 
@@ -114,9 +122,9 @@ class MangaViewer {
         viewer.dataset.page = pageIndex + 1;
 
         const img = document.createElement('img');
-        const pageUrl = `paginas/${this.allPages[pageIndex]}`;
+        const pageData = this.pages[pageIndex];
 
-        img.src = pageUrl;
+        img.src = pageData.image;
         img.alt = `Página ${pageIndex + 1}`;
         img.loading = 'lazy';
 
@@ -127,7 +135,7 @@ class MangaViewer {
         viewer.appendChild(img);
         viewer.appendChild(pageNum);
 
-        // Si la página tiene link externo
+        // Página con link externo
         if (this.pageLinks[pageIndex + 1]) {
             viewer.style.cursor = 'pointer';
 
@@ -140,10 +148,6 @@ class MangaViewer {
 
         wrapper.appendChild(viewer);
     }
-
-    // =======================
-    // OBSERVADOR
-    // =======================
 
     observePages() {
         const mainContent = document.getElementById('mainContent');
@@ -190,9 +194,10 @@ class MangaViewer {
 
         links.forEach((link, index) => {
             const item = this.catalog[index];
+
             if (!item || item.type === 'external') return;
 
-            const nextItemStart = this.catalog[index + 1]?.startPage || this.allPages.length + 1;
+            const nextItemStart = this.catalog[index + 1]?.startPage || this.pages.length + 1;
 
             const isInRange =
                 pageNumber >= item.startPage &&
@@ -201,10 +206,6 @@ class MangaViewer {
             link.classList.toggle('active', isInRange);
         });
     }
-
-    // =======================
-    // CONTROLES
-    // =======================
 
     setupEventListeners() {
         const sidebarToggle = document.getElementById('sidebarToggle');
@@ -240,19 +241,6 @@ class MangaViewer {
         }
     }
 
-    scrollToPage(pageNumber) {
-        const pageElement = document.getElementById(`page-${pageNumber}`);
-
-        if (pageElement) {
-            pageElement.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-
-            this.updateActiveCatalogLink(pageNumber);
-        }
-    }
-
     scrollToStart() {
         const mainContent = document.getElementById('mainContent');
         if (mainContent) {
@@ -270,7 +258,6 @@ class MangaViewer {
     }
 }
 
-// INICIO
 document.addEventListener('DOMContentLoaded', () => {
     new MangaViewer();
 });
