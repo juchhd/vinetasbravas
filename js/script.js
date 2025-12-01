@@ -250,14 +250,30 @@ class MangaViewer {
         let isDragging = false;
         let offsetX = 0;
         let offsetY = 0;
+        let wasDragging = false;
 
         if (!mascot) return;
+
+        // Audio del ladrido
+        const barkSound = new Audio('./recursos/ladrido.mp3');
+        barkSound.volume = 0.5; // volumen al 50%
 
         // Toggle minimizar/maximizar
         if (mascotToggle) {
             mascotToggle.addEventListener('click', (e) => {
                 e.stopPropagation();
                 mascot.classList.toggle('minimized');
+            });
+        }
+
+        // Click en la mascota para reproducir ladrido
+        if (mascotContent) {
+            mascotContent.addEventListener('click', (e) => {
+                if (!wasDragging) {
+                    barkSound.currentTime = 0; // reiniciar audio si ya está sonando
+                    barkSound.play().catch(err => console.log('Error reproduciendo audio:', err));
+                }
+                wasDragging = false;
             });
         }
 
@@ -279,6 +295,7 @@ class MangaViewer {
 
         function startDrag(e) {
             isDragging = true;
+            wasDragging = false;
             mascot.classList.add('dragging');
             
             const rect = mascot.getBoundingClientRect();
@@ -297,6 +314,7 @@ class MangaViewer {
         function drag(e) {
             if (!isDragging) return;
             
+            wasDragging = true;
             e.preventDefault();
             
             let clientX, clientY;
@@ -312,7 +330,6 @@ class MangaViewer {
             const newLeft = clientX - offsetX;
             const newTop = clientY - offsetY;
             
-            // Limitar dentro de la ventana
             const maxX = window.innerWidth - mascot.offsetWidth;
             const maxY = window.innerHeight - mascot.offsetHeight;
             
