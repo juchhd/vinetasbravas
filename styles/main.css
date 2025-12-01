@@ -29,6 +29,20 @@ html, body {
     color: var(--color-text);
 }
 
+/* Animación de entrada para toda la página */
+body {
+    animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 /* Fondo a pantalla completa detrás de todo */
 .site-bg {
     position: fixed;
@@ -45,20 +59,21 @@ html, body {
     display: block;
 }
 
-/* HEADER encima del fondo */
+/* HEADER encima del fondo - en el tope de la página */
 .header {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: auto;            /* ajusta según el logo */
-    padding: 8px 0;          /* pequeño margen vertical */
-    background-color: rgba(0, 0, 0, 0.85); /* fondo más opaco, solo el background */
-    z-index: 1000;      /* asegurar que quede sobre el fondo */
-
+    height: auto;
+    padding: 8px 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    position: sticky;
+    position: absolute; /* cambiado de fixed a absolute */
     top: 0;
-    /* ...existing code... */
+    left: 0;
+    right: 0;
+    width: 100%;
 }
 
 .header__logo {
@@ -74,11 +89,12 @@ html, body {
     opacity: 1; /* explícito para evitar efectos colaterales */
 }
 
-/* MAIN CONTENT SCROLLABLE */
+/* MAIN CONTENT - quitar padding-top ya que header no es fijo */
 .main-content {
-    min-height: calc(100vh - var(--footer-height)); /* no depende de header fijo */
+    min-height: calc(100vh - var(--footer-height));
     padding: 40px 20px;
-    background-color: transparent; /* para que se vea el fondo */
+    padding-top: 180px; /* mantener espacio para el header */
+    background-color: transparent;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -138,10 +154,10 @@ html, body {
 .sidebar-floating {
     position: fixed;
     left: 15px;
-    top: var(--header-offset); /* separar más del header */
+    top: 180px; /* posición fija desde el top */
     width: var(--sidebar-width);
-    max-height: calc(100vh - var(--header-height) - 40px);
-    transition: transform 0.3s ease;
+    max-height: calc(100vh - 220px); /* ajustado para header fijo */
+    transition: transform 0.3s ease; /* mantener solo transform para evitar conflictos */
     z-index: 100;
     display: flex;
     flex-direction: column;
@@ -371,12 +387,15 @@ html, body {
     :root {
         --sidebar-width: 220px;
         --page-indicator-width: 110px;
-        --header-height: 60px;
-        --header-offset: 140px; /* antes: 110px */
     }
 
     .main-content {
         padding: 20px 10px;
+        padding-top: 140px; /* ajuste para header en móvil */
+    }
+
+    .sidebar-floating {
+        top: 140px;
     }
 
     .viewer {
@@ -388,7 +407,14 @@ html, body {
     :root {
         --sidebar-width: 180px;
         --page-indicator-width: 90px;
-        --header-offset: 130px; /* antes: 100px */
+    }
+
+    .main-content {
+        padding-top: 130px;
+    }
+
+    .sidebar-floating {
+        top: 130px;
     }
 
     .sidebar__title {
