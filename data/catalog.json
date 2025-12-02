@@ -1,13 +1,13 @@
 [
     {
         "id": 1,
-        "title": "Metal Soul Vol. 1",
+        "title": "Portada",
         "startPage": 1,
         "type": "internal"
     },
      {
     "id": 2,
-    "title": "Metal Soul Vol. 3",
+    "title": "prueba link externo",
     "startPage": 15,
     "type": "external",
     "url": "https://instagram.com"
