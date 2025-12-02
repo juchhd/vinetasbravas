@@ -5,12 +5,18 @@
         "startPage": 1,
         "type": "internal"
     },
+    {
+        "id": 2,
+        "title": "informacion",
+        "startPage": 2,
+        "type": "internal"
+    },
      {
-    "id": 2,
-    "title": "prueba link externo",
-    "startPage": 15,
+    "id": 3,
+    "title": "como participar",
+    "startPage": 3,
     "type": "external",
-    "url": "https://instagram.com"
+    "url": "https://www.instagram.com/bored_6uy/"
   }
    
 ]
