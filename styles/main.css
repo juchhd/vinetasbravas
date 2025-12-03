@@ -239,7 +239,7 @@ body {
     display: block;
     color: var(--color-text);
     text-decoration: none;
-    padding: 5px 8px;
+    padding: 5px 15px;
     transition: all 0.2s ease;
     cursor: pointer;
     text-align: center;
@@ -384,10 +384,6 @@ body {
     cursor: grab;
 }
 
-.mascot-floating.minimized.dragging .mascot-floating__toggle {
-    cursor: grabbing;
-}
-
 /* FOOTER */
 .footer {
     height: var(--footer-height);
@@ -408,40 +404,49 @@ body {
     }
 
     .main-content {
-        padding: 20px 10px;
-        padding-top: 20px; /* reducir para responsive */
+        padding: 20px 10px !important;
+        padding-top: 20px !important;
     }
 
     .sidebar-floating {
-        top: 140px;
+        top: 140px !important;
+    }
+
+    .sidebar-floating__content {
+        margin-top: 120px !important;
     }
 
     .sidebar-floating__toggle {
-        width: 35px; /* reducido */
-        height: 35px; /* reducido */
-        font-size: 0.5em; /* reducido */
-        right: calc(-35px); /* ajustado */
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 0.5em !important;
+        right: calc(-35px) !important;
     }
 
-    /* Mascota más pequeña en tablet */
+    .catalog__link {
+        padding: 1px 15px !important;
+        margin-top: 5px !important;
+        font-size: 0.95em !important;
+    }
+
     .mascot-floating__content {
-        width: 100px; /* reducido de 120px */
+        width: 100px !important;
     }
 
     .mascot-floating__toggle {
-        width: 35px; /* reducido de 40px */
-        height: 35px; /* reducido de 40px */
-        font-size: 1.3em; /* reducido */
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 1.3em !important;
     }
 
     .mascot-floating.minimized .mascot-floating__toggle {
-        width: 40px; /* reducido de 45px */
-        height: 40px; /* reducido de 45px */
-        font-size: 1.3em; /* reducido */
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.3em !important;
     }
 
     .viewer {
-        max-width: 100%;
+        max-width: 100% !important;
     }
 }
 
@@ -452,55 +457,60 @@ body {
     }
 
     .main-content {
-        padding-top: 20px; /* mantener consistente */
+        padding-top: 20px !important;
     }
 
     .sidebar-floating {
-        top: 130px;
+        top: 130px !important;
+        left: 10px !important;
+    }
+
+    .sidebar-floating__content {
+        margin-top: 140px !important;
     }
 
     .sidebar-floating__toggle {
-        width: 30px; /* más pequeño para móvil */
-        height: 30px;
-        font-size: 0.45em;
-        right: calc(-30px);
-    }
-
-    /* Mascota mucho más pequeña en móvil */
-    .mascot-floating {
-        right: 15px; /* más pegada al borde */
-        bottom: 15px;
-    }
-
-    .mascot-floating__content {
-        width: 80px; /* reducido significativamente */
-    }
-
-    .mascot-floating__toggle {
-        width: 30px; /* más pequeño */
-        height: 30px;
-        font-size: 1.1em;
-        top: -8px;
-        right: -8px;
-    }
-
-    .mascot-floating.minimized .mascot-floating__toggle {
-        width: 35px; /* más pequeño cuando está minimizada */
-        height: 35px;
-        font-size: 1.2em;
-    }
-
-    .sidebar__title {
-        font-size: 1.1em;
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 0.45em !important;
+        right: calc(-30px) !important;
     }
 
     .catalog__link {
-        padding: 8px;
-        font-size: 0.9em;
+        padding: 1px 10px !important;
+        margin-top: 10px !important;
+        font-size: 0.85em !important;
     }
 
-    .page-number {
-        font-size: 1.6em;
+    .mascot-floating {
+        right: 15px !important;
+        bottom: 15px !important;
+    }
+
+    .mascot-floating__content {
+        width: 80px !important;
+    }
+
+    .mascot-floating__toggle {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 1.1em !important;
+        top: -8px !important;
+        right: -8px !important;
+    }
+
+    .mascot-floating.minimized .mascot-floating__toggle {
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 1.2em !important;
+    }
+
+    .sidebar__title {
+        font-size: 1.1em !important;
+    }
+
+    .logo {
+        max-height: 100px !important;
     }
 }
 
